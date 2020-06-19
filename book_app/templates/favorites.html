@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Book Info</title>
+</head>
+<body>
+    <div class="card">
+
+        <!-- Logo and name header -->
+        <div class="card-header">
+            <div class="col">
+                <a href="/logout"  class="float-right">Log Out</a>
+                <h3 class="font-italic">Favorite Books</h3>
+            </div>
+            <h1 class="text-center">{{ user.first_name }}'s Favorite Books</h1>
+        </div>
+
+        
+        <div class="row card-body">
+            <!-- Book info - can edit if yours -->
+            <div class="col p-4 bg-light m-1 border text-center">
+                {% for book in all_books reversed %}
+                    {% if user in book.liked_by.all %}
+                        <a href="/book/{{ book.id }}" class="font-weight-bold">{{ book.title }}</a>
+                        <p class="font-italic" class = "name">(added by {{ book.uploaded_by.first_name }} {{ book.uploaded_by.last_name }})</p>
+                        <a href="/unfavorite/{{ book.id }}" name="unfavorite" class="text-danger">Un-Favorite</a>
+                        <br> <br> <br>
+                    {% endif %} 
+                {% endfor %}
+                <a href="/success" class="font-italic">Return Home</a>
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+</html>

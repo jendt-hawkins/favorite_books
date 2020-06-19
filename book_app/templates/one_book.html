@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        #edit_title{
+            width: 60%;
+            height: 4rem;
+            font-size: 30px;
+        }
+        #edit_description{
+            width: 95%;
+            height: auto;
+        }
+    </style>
+    <title>Book Info</title>
+</head>
+<body>
+    <div class="card">
+
+        <!-- Logo and name header -->
+        <div class="card-header">
+            <div class="col">
+                <a href="/logout"  class="float-right">Log Out</a>
+                <h3 class="font-italic">Favorite Books</h3>
+            </div>
+            <h1 class="text-center">Welcome, {{ user.first_name }}!</h1>
+        </div>
+
+        
+        <div class="row card-body">
+            <!-- Book info - can edit if yours -->
+            <div class="col p-4 bg-light m-4 border">
+                {% if user == book.uploaded_by %}
+                    <form action="/update/{{ book.id }}" method="post">
+                        {% csrf_token %}
+                        <input value="{{ book.title }}" type="text" name="title" id="edit_title">
+                        <br>
+                        <p>Added by: {{ user.first_name}} {{ user.last_name }}</p>
+                        <p>Added on: {{ book.created_at }}</p>
+                        <p>Last updated on: {{ book.updated_at }}</p>
+                        <p>Description:</p>
+                        <input value="{{ book.description }}" name="description" type="text" id="edit_description">
+                        <br><br>
+                        <input type="submit" value="Update" class="btn btn-primary">
+                    </form>
+                    <br>
+                    <form action="/delete/{{ book.id }}" method="post">
+                        {%csrf_token%}
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                {% else %}
+                    <h3>{{ book.title }}</h3>
+                    <p>Added by: {{ user.first_name}} {{ user.last_name }}</p>
+                    <p>Added on: {{ book.created_at }}</p>
+                    <p>Last updated on: {{ book.updated_at }}</p>
+                    <p>Description: {{ book.description }}</p>
+                    <br>
+                    <br>
+                    <a href="/favorite/{{ book.id }}" name="favorited">Add to Favorites</a>
+                {% endif %}
+                <br>
+                <a href="/success" class="font-italic">Return Home</a>
+            </div>
+            <!-- List of users who liked this book -->
+            <div class="col p-4 bg-light m-4 border">
+                <h3>Users who like this book:</h3>
+                {% for likes in book.liked_by.all %}
+                    <ul>
+                        {% if likes == user %}
+                            <a href="/unfavorite/{{ book.id }}" name="unfavorite" class="text-danger">Un-Favorite</a>
+                        {% endif %}
+                        <li>{{ likes.first_name }} {{ likes.last_name }}</li>
+                    </ul>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
